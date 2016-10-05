@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<script src="js/to-do-list.js"></script>
+	<title>To Do List</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="col-lg-5">
+			<div class="panel panel-info">
+				<div class="panel-heading">Dodaj nowe zadanie</div>
+				<div class="panel-body">
+					<div class="col-xs-10 ">
+						<input class="form-control" id="newTask" placeholder="Podaj nazwę nowego zadania">
+					</div>
+					<div class="col-xs-2 ">
+						<button type="button" class="btn btn-success pull-right">Dodaj
+							<span class="glyphicon glyphicon glyphicon-pushpin"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-info">
+				<div class="panel-body">
+					<span class="glyphicon glyphicon-remove text-danger"></span>
+					Napisać to do list
+					<button type="button" class="btn btn-primary pull-right btn-sm col-xs-12 col-sm-2">Edytuj
+						<span class="glyphicon glyphicon-chevron-right"></span>
+					</button> 
+					<button type="button" class="btn btn-info pull-right btn-sm col-xs-12 col-sm-2">Podgląd
+						<span class="glyphicon glyphicon-search"></span>
+					</button> 
+					<button type="button" class="btn btn-danger pull-right btn-sm col-xs-12 col-sm-2">Usun
+						<span class="glyphicon glyphicon-trash"></span>
+					</button>
+				</div>
+			</div>
+
+
+			<div class="panel panel-warning">
+				<div class="panel-heading">Filtry</div>
+				<div class="panel-body">
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3 active" role="group">Wszystkie</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Gotowe</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Niegotowe</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Najstarsze</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Najnowsze</button>
+				</div>
+			</div>
+
+
+		</div>
+		<div class="col-lg-7">
+			<div class="container-fluid">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						Napisać to do list
+						<span class="text-primary pull-right">2016-10-05 16:52:40</span>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="panel panel-info">
+								<div class="panel-heading">Nazwa zadania</div>
+								<div class="panel-body">
+									Napisać to do list
+								</div>
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Opis zadania</div>
+								<div class="panel-body">
+									Napisać aplikację to do list przy użyciu html,css i vanilla js
+								</div>
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Do kiedy?</div>
+								<div class="panel-body">
+									Jak najszybciej
+								</div>
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Data dodatnia</div>
+								<div class="panel-body">
+									2016-10-05 16:52:40
+								</div>
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Data ostatniego edytowania</div>
+								<div class="panel-body">
+									2016-10-05 17:16:12
+								</div>
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Zakończone?</div>
+								<div class="panel-body">
+									<span class="glyphicon glyphicon-remove text-danger"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</body>
+</html>
+
+
