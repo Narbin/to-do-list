@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/css.css">
 	<script src="js/to-do-list.js"></script>
 	<title>To Do List</title>
 </head>
@@ -13,29 +14,31 @@
 				<div class="panel-heading">Dodaj nowe zadanie</div>
 				<div class="panel-body">
 					<div class="col-xs-10 ">
-						<input class="form-control" id="newTask" placeholder="Podaj nazwę nowego zadania">
+						<input class="form-control" id="newTaskName" placeholder="Podaj nazwę nowego zadania">
 					</div>
 					<div class="col-xs-2 ">
-						<button type="button" class="btn btn-success pull-right">Dodaj
+						<button type="button" class="btn btn-success pull-right" id="addTask">Dodaj
 							<span class="glyphicon glyphicon glyphicon-pushpin"></span>
 						</button>
 					</div>
 				</div>
 			</div>
 
-			<div class="panel panel-info">
-				<div class="panel-body">
-					<span class="glyphicon glyphicon-remove text-danger"></span>
-					Napisać to do list
-					<button type="button" class="btn btn-primary pull-right btn-sm col-xs-12 col-sm-2">Edytuj
-						<span class="glyphicon glyphicon-chevron-right"></span>
-					</button> 
-					<button type="button" class="btn btn-info pull-right btn-sm col-xs-12 col-sm-2">Podgląd
-						<span class="glyphicon glyphicon-search"></span>
-					</button> 
-					<button type="button" class="btn btn-danger pull-right btn-sm col-xs-12 col-sm-2">Usun
-						<span class="glyphicon glyphicon-trash"></span>
-					</button>
+			<div id="taskHolder">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						<span class="glyphicon glyphicon-remove text-danger"></span>
+						Napisać to do list
+						<button type="button" class="btn btn-primary pull-right btn-sm col-xs-12 col-sm-2" id="">Edytuj
+							<span class="glyphicon glyphicon-chevron-right"></span>
+						</button> 
+						<button type="button" class="btn btn-info pull-right btn-sm col-xs-12 col-sm-2" id="">Podgląd
+							<span class="glyphicon glyphicon-search"></span>
+						</button> 
+						<button type="button" class="btn btn-danger pull-right btn-sm col-xs-12 col-sm-2" id="">Usun
+							<span class="glyphicon glyphicon-trash"></span>
+						</button>
+					</div>
 				</div>
 			</div>
 
@@ -43,11 +46,11 @@
 			<div class="panel panel-warning">
 				<div class="panel-heading">Filtry</div>
 				<div class="panel-body">
-					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3 active" role="group">Wszystkie</button>
-					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Gotowe</button>
-					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Niegotowe</button>
-					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Najstarsze</button>
-					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group">Najnowsze</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3 active" role="group" id="">Wszystkie</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group" id="">Gotowe</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group" id="">Niegotowe</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group" id="">Najstarsze</button>
+					<button type="button" class="btn btn-warning btn-group col-xs-12 col-sm-3" role="group" id="">Najnowsze</button>
 				</div>
 			</div>
 
