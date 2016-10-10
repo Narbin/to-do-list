@@ -1,18 +1,27 @@
 document.addEventListener('DOMContentLoaded',() => {
 
 	let newTaskButton = document.querySelector('#addTask'),
-		ID = 0,
+		deleteTaskButton = document.querySelectorAll('.btn, .btn-danger, .pull-right, .btn-sm, .col-xs-12, .col-sm-2'),
+		id = 0,
 		taskArray = [ ];
 
 		
 
 	if(localStorage.getItem('localStorageTaskArray')){
 		loadedData = JSON.parse(localStorage.getItem('localStorageTaskArray'));
-		ID = loadedData.ID;
+		id = loadedData.id;
 		taskArray = loadedData.taskArray;
 	}
 
 	newTaskButton.addEventListener('click', addNewTask);
+	//deleteTaskButton.addEventListener('click', deleteTask);
+
+	function deleteTask(task){
+		if(confirm("Napewno chcesz usunąć zadanie??") === true){
+			taskDiv = document.querySelector(`[id='${task.id}']`);
+			taskDiv.parentNode.removeChild(taskDiv);
+		}
+	}
 
 	
 	function addNewTask(){
@@ -34,21 +43,21 @@ document.addEventListener('DOMContentLoaded',() => {
 	}
 
 	function getTaskID(){
-		ID += 1;
-		return ID
+		id += 1;
+		return id
 	}
 
 	function saveTask(task){
 		taskArray.push(task);
 		localStorage.setItem('localStorageTaskArray', JSON.stringify({
-			ID: ID,
+			id: id,
 			taskArray: taskArray
 		}));
 	}
 
 	class Task {
-		constructor(_taskID, _taskName, _created, _status){
-			this.ID = _taskID
+		constructor(_taskId, _taskName, _created, _status){
+			this.id = _taskId
 			this.name = _taskName;
 			this.created = _created;
 			this.status = _status;
@@ -65,7 +74,12 @@ document.addEventListener('DOMContentLoaded',() => {
 			searchButton = document.createElement('button'),
 			deleteButton = document.createElement('button');
 
-		
+		panelInfoDiv.id = task.id;
+
+		deleteButton.onclick = function() {
+			deleteTask(task);
+		};
+
 		panelBodyDiv.innerHTML = `<span class="glyphicon glyphicon-remove text-danger"></span> ${task.name}`;
 		editButton.innerHTML = `Edytuj <span class="glyphicon glyphicon-chevron-right"></span>`;
 		searchButton.innerHTML = `Podgląd <span class="glyphicon glyphicon-search"></span>`;
