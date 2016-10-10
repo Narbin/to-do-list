@@ -35,6 +35,71 @@ document.addEventListener('DOMContentLoaded',() => {
 		}
 	}
 
+	function searchTask(task){
+		let searchHolderDiv = document.querySelector('#searchHolder');
+		let panelSuccessDiv = document.createElement('div');
+		let panelBodyDiv = document.createElement('div');
+		let taskIsDone;
+		if(task.status){
+			taskIsDone =  `<span class="glyphicon glyphicon-ok text-success"></span>`
+		}else{
+			taskIsDone =  `<span class="glyphicon glyphicon-remove text-danger"></span>`
+		}
+
+		panelSuccessDiv.innerHTML = `
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							${task.name}
+							<span class="text-primary pull-right">${task.created}</span>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="panel panel-info">
+									<div class="panel-heading">Nazwa zadania</div>
+									<div class="panel-body">
+										${task.name}
+									</div>
+								</div>
+								<div class="panel panel-info">
+									<div class="panel-heading">Opis zadania</div>
+									<div class="panel-body">
+										${task.description}
+									</div>
+								</div>
+								<div class="panel panel-info">
+									<div class="panel-heading">Do kiedy?</div>
+									<div class="panel-body">
+										${task.deadline}
+									</div>
+								</div>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data dodatnia</div>
+									<div class="panel-body">
+										${task.created}
+									</div>
+								</div>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data ostatniego edytowania</div>
+									<div class="panel-body">
+										${task.lastEdit}
+									</div>
+								</div>
+								<div class="panel panel-info">
+									<div class="panel-heading">Zakończone?</div>
+									<div class="panel-body">
+										${taskIsDone}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>`;
+
+
+
+		searchHolderDiv.appendChild(panelSuccessDiv);
+
+
+	}
 	
 	function addNewTask(){
 		if(document.querySelector('#newTaskName').value){
@@ -76,8 +141,14 @@ document.addEventListener('DOMContentLoaded',() => {
 		constructor(_taskId, _taskName, _created, _status){
 			this.id = _taskId
 			this.name = _taskName;
+			this.description = _taskName;
 			this.created = _created;
 			this.status = _status;
+			this.lastEdit = _created;
+			this.deadline = _created;
+		}
+	}
+
 		}
 	}
 
@@ -95,6 +166,10 @@ document.addEventListener('DOMContentLoaded',() => {
 
 		deleteButton.onclick = function() {
 			deleteTask(task);
+		};
+
+		searchButton.onclick = function() {
+			searchTask(task);
 		};
 
 		panelBodyDiv.innerHTML = `<span class="glyphicon glyphicon-remove text-danger"></span> ${task.name}`;
