@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded',() => {
 
 	let newTaskButton = document.querySelector('#addTask'),
-		deleteTaskButton = document.querySelectorAll('.btn, .btn-danger, .pull-right, .btn-sm, .col-xs-12, .col-sm-2'),
 		id = 0,
 		taskArray = [ ];
 
@@ -11,24 +10,38 @@ document.addEventListener('DOMContentLoaded',() => {
 		loadedData = JSON.parse(localStorage.getItem('localStorageTaskArray'));
 		id = loadedData.id;
 		taskArray = loadedData.taskArray;
+
+		loadingTasks();
 	}
 
+
 	newTaskButton.addEventListener('click', addNewTask);
-	//deleteTaskButton.addEventListener('click', deleteTask);
+
+
+	function loadingTasks(){
+		taskArrLength = taskArray.length;
+		for(let i = 0;i < taskArray.length;i+=1){
+			generateTasksOnSite(taskArray[i]);
+		}
+	}
 
 	function deleteTask(task){
 		if(confirm("Napewno chcesz usunąć zadanie??") === true){
 			taskDiv = document.querySelector(`[id='${task.id}']`);
 			taskDiv.parentNode.removeChild(taskDiv);
+			taskArray.splice(taskArray.indexOf(task), 1);
+			saveActualData();
+			
 		}
 	}
 
 	
 	function addNewTask(){
-		let newTask = new Task(getTaskID(),getTaskName(),getActualTime(),false);
-		saveTask(newTask);
-		generateTasksOnSite(newTask);
-		console.log(newTask);
+		if(document.querySelector('#newTaskName').value){
+			let newTask = new Task(getTaskID(),getTaskName(),getActualTime(),false);
+			saveTask(newTask);
+			generateTasksOnSite(newTask);
+		}
 	}
 
 	function getActualTime(){
@@ -49,6 +62,10 @@ document.addEventListener('DOMContentLoaded',() => {
 
 	function saveTask(task){
 		taskArray.push(task);
+		saveActualData();
+	}
+
+	function saveActualData(){
 		localStorage.setItem('localStorageTaskArray', JSON.stringify({
 			id: id,
 			taskArray: taskArray
