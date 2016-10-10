@@ -149,10 +149,33 @@ document.addEventListener('DOMContentLoaded',() => {
 		}
 	}
 
+	function generatorOfDom(parentId,type,innerHTML,className,onClickFunction,setId){
+		let whereHaveToAppearDiv = document.querySelector('#'+parentId),
+			objectOfDom = document.createElement(type);
+
+		if(innerHTML){
+			objectOfDom.innerHTML = innerHTML;
 		}
+
+		if(className){
+			objectOfDom.className = className;
+		}
+
+		if(onClickFunction){
+			objectOfDom.onclick = onClickFunction;
+		}
+
+		if(setId){
+			objectOfDom.id = setId;
+		}
+
+		whereHaveToAppearDiv.appendChild(objectOfDom);
+
 	}
 
 	function generateTasksOnSite(task){
+
+		//generatorOfDom('taskHolder','div',`<span class="glyphicon glyphicon-remove text-danger"></span> ${task.name}`,'panel panel-info',null,task.id);
 
 		let taskHolderDiv = document.querySelector('#taskHolder');
 
