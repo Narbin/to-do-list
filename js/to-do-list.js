@@ -47,13 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
        		break;
        		case 'oldest':
        			taskArray.sort(function(a, b) {
-				    return parseFloat(a.created) - parseFloat(b.created);
+				    return Date.parse(a.created) - Date.parse(b.created);
 				});
        			refreshTasks();
        		break;
        		case 'newest':
        			taskArray.sort(function(a, b) {
-				    return parseFloat(b.created) - parseFloat(a.created);
+				    return Date.parse(b.created) - Date.parse(a.created);
 				});
        			refreshTasks();
        		break;
