@@ -1,16 +1,15 @@
 /* global document:true localStorage:true confirm:true*/
 document.addEventListener('DOMContentLoaded', () => {
 
-	let newTaskButton = document.querySelector('#addTask'),
-		sortButton = document.querySelector('#sort'),
+	let newTaskButton = document.getElementById('addTask'),
+		sortButton = document.getElementById('sort'),
 		id = 0,
 		taskArray = [ ];
 
  
 	function whatSortButtonWasClicked(event) {
 		if (event.target !== event.currentTarget) {
-			let clickedItem = event.target.id;
-			sort(clickedItem);
+			sort(event.target.id);
 		}
 		event.stopPropagation();
 	}
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function sort(what){
 		let arrLength = taskArray.length,
-			taskHolderDiv = document.querySelector('#taskHolder');
+			taskHolderDiv = document.getElementById('taskHolder');
 		switch (what) {
        		case 'all':
        			refreshTasks();
@@ -68,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}));
 	}
 
-	function clearDiv(div) {
+	function clearFirstChild(div) {
 		if (div.firstChild) {
 			div.removeChild(div.firstChild);
 		}
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function deleteTask(task) {
 		if (confirm('Napewno chcesz usunąć zadanie??') === true) {
-			let taskDiv = document.querySelector(`[id='${task.id}']`);
+			let taskDiv = document.getElementById(`${task.id}`);
 			taskDiv.parentNode.removeChild(taskDiv);
 			taskArray.splice(taskArray.indexOf(task), 1);
 			saveActualData();
@@ -84,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function refreshTasks(){
-		let taskHolderDiv = document.querySelector('#taskHolder');
+		let taskHolderDiv = document.getElementById('taskHolder');
 		while (taskHolderDiv.hasChildNodes()) {
 			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
 		}
@@ -93,11 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function saveChanges(task) {
-		let taskNameInput = document.querySelector('#taskName'),
-			taskDescriptionInput = document.querySelector('#taskDescription'),
-			taskDeadlineInput = document.querySelector('#taskDeadline'),
-			taskHolderDiv = document.querySelector('#taskHolder'),
-			taskStatus = document.querySelector('#taskStatus'),
+		let taskNameInput = document.getElementById('taskName'),
+			taskDescriptionInput = document.getElementById('taskDescription'),
+			taskDeadlineInput = document.getElementById('taskDeadline'),
+			taskHolderDiv = document.getElementById('taskHolder'),
+			taskStatus = document.getElementById('taskStatus'),
 			indexOfTask = taskArray.indexOf(task);
 
 		taskArray[indexOfTask].description = taskDescriptionInput.value;
@@ -116,133 +115,112 @@ document.addEventListener('DOMContentLoaded', () => {
 		editTask(taskArray[indexOfTask]);
 	}
 
-	function searchTask(task) {
-		let infoHolderDiv = document.querySelector('#infoHolder'),
-			panelSuccessDiv = document.createElement('div'),
-			taskIsDone;
+	function createView(task,forWho) {
 
-		clearDiv(infoHolderDiv);
-		
-		if (task.status) {
-			taskIsDone = `<span class='glyphicon glyphicon-ok text-success'></span>`;
-		} else {
-			taskIsDone = `<span class='glyphicon glyphicon-remove text-danger'></span>`;
-		}
+		let taskIsDone,
+			doc;
 
-		panelSuccessDiv.innerHTML = `
-					<div class='panel panel-success'>
-						<div class='panel-heading'>
+		if (forWho === `edit`){
+			if (task.status) {
+				taskIsDone = `<input type="checkbox" checked id="taskStatus">`;
+			} else {
+				taskIsDone = `<input type="checkbox" id="taskStatus">`;
+			}
+			doc = `
+					<div class="panel panel-success">
+						<div class="panel-heading">
 							${task.name}
-							<span class='text-primary pull-right'>${task.created}</span>
+							<span class="text-primary pull-right">${task.created}</span>
 						</div>
-						<div class='panel-body'>
-							<div class='row'>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Nazwa zadania</div>
-									<div class='panel-body'>
+						<div class="panel-body">
+							<div class="row">
+								<div class="panel panel-info">
+									<div class="panel-heading">Nazwa zadania</div>
+									<div class="panel-body">
 										${task.name}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Opis zadania</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Opis zadania</div>
+									<div class="panel-body">
 										${task.description}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Do kiedy?</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Do kiedy?</div>
+									<div class="panel-body">
 										${task.deadline}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Data dodatnia</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data dodatnia</div>
+									<div class="panel-body">
 										${task.created}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Data ostatniego edytowania</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data ostatniego edytowania</div>
+									<div class="panel-body">
 										${task.lastEdit}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Zakończone?</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Zakończone?</div>
+									<div class="panel-body">
 										${taskIsDone}
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>`;
-
-		infoHolderDiv.appendChild(panelSuccessDiv);
-
-	}
-
-	function editTask(task) {
-
-		let infoHolderDiv = document.querySelector('#infoHolder'),
-			panelPrimaryDiv = document.createElement('div'),
-			saveButton = document.createElement('button'),
-			taskIsDone;
-
-		clearDiv(infoHolderDiv);
-
-		saveButton.onclick = function () {
-			saveChanges(task);
-		};
-		
-		saveButton.className = 'btn btn-success btn-sm center-block';
-		saveButton.innerHTML = `Zapisz`;
-
-		if (task.status) {
-			taskIsDone = `<input type="checkbox" checked id='taskStatus'>`;
-		} else {
-			taskIsDone = `<input type="checkbox" id='taskStatus'>`;
-		}
-		panelPrimaryDiv.innerHTML = `
-					<div class='panel panel-primary'>
-						<div class='panel-heading'>
+					</div>`
+		} else if(forWho === `search`) {
+			if (task.status) {
+				taskIsDone = `<span class="glyphicon glyphicon-ok text-success"></span>`;
+			} else {
+				taskIsDone = `<span class="glyphicon glyphicon-remove text-danger"></span>`;
+			}
+			
+			doc = `
+					<div class="panel panel-primary">
+						<div class="panel-heading">
 							${task.name}
-							<span class='pull-right'>${task.created}</span>
+							<span class="pull-right">${task.created}</span>
 						</div>
-						<div class='panel-body'>
-							<div class='row'>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Nazwa zadania</div>
-									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.name}" id='taskName'>
+						<div class="panel-body">
+							<div class="row">
+								<div class="panel panel-info">
+									<div class="panel-heading">Nazwa zadania</div>
+									<div class="panel-body">
+										<input type="text" class="form-control" value="${task.name}" id="taskName">
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Opis zadania</div>
-									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.description}" id='taskDescription'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Opis zadania</div>
+									<div class="panel-body">
+										<input type="text" class="form-control" value="${task.description}" id="taskDescription">
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Do kiedy?</div>
-									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.deadline}" id='taskDeadline'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Do kiedy?</div>
+									<div class="panel-body">
+										<input type="text" class="form-control" value="${task.deadline}" id="taskDeadline">
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Data dodatnia</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data dodatnia</div>
+									<div class="panel-body">
 										${task.created}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Data ostatniego edytowania</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Data ostatniego edytowania</div>
+									<div class="panel-body">
 										${task.lastEdit}
 									</div>
 								</div>
-								<div class='panel panel-info'>
-									<div class='panel-heading'>Zakończone?</div>
-									<div class='panel-body'>
+								<div class="panel panel-info">
+									<div class="panel-heading">Zakończone?</div>
+									<div class="panel-body">
 										 <div class="checkbox">
 								        <label>
 								          ${taskIsDone}
@@ -252,7 +230,40 @@ document.addEventListener('DOMContentLoaded', () => {
 								</div>
 							</div>
 						</div>
-					</div>`;
+					</div>`
+		}
+		return doc;
+	}
+
+	function searchTask(task) {
+		let infoHolderDiv = document.getElementById('infoHolder'),
+			panelSuccessDiv = document.createElement('div'),
+			taskIsDone;
+
+		clearFirstChild(infoHolderDiv);
+
+		panelSuccessDiv.innerHTML = createView(task,`search`);;
+
+		infoHolderDiv.appendChild(panelSuccessDiv);
+
+	}
+
+	function editTask(task) {
+
+		let infoHolderDiv = document.getElementById('infoHolder'),
+			panelPrimaryDiv = document.createElement('div'),
+			saveButton = document.createElement('button');
+			
+		clearFirstChild(infoHolderDiv);
+
+		saveButton.onclick = function () {
+			saveChanges(task);
+		};
+		
+		saveButton.className = 'btn btn-success btn-sm center-block';
+		saveButton.innerHTML = `Zapisz`;
+
+		panelPrimaryDiv.innerHTML = createView(task,`edit`);
 
 		infoHolderDiv.appendChild(panelPrimaryDiv);
 
@@ -263,14 +274,26 @@ document.addEventListener('DOMContentLoaded', () => {
 	function generateTasksOnSite(task) {
 		//generatorOfDom('taskHolder','div',`<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`,'panel panel-info',null,task.id);
 
-
-		let taskHolderDiv = document.querySelector('#taskHolder');
+		let taskHolderDiv = document.getElementById('taskHolder');
 
 		let panelInfoDiv = document.createElement('div'),
 			panelBodyDiv = document.createElement('div'),
-			editButton = document.createElement('button'),
-			searchButton = document.createElement('button'),
-			deleteButton = document.createElement('button');
+			editButton = document.createElement('div'),
+			searchButton = document.createElement('div'),
+			deleteButton = document.createElement('div');
+
+			chevronRightGlyphicon = document.createElement('span');
+			searchGlyphicon = document.createElement('span');
+			trashGlyphicon = document.createElement('span');
+			glyphicon = document.createElement('span');
+
+			chevronRightGlyphicon.className = `glyphicon glyphicon-chevron-right`;
+			searchGlyphicon.className = `glyphicon glyphicon-search`;
+			trashGlyphicon.className = `glyphicon glyphicon-trash`;
+
+			editButton.innerHTML = `Edytuj`;
+			searchButton.innerHTML = `Podgląd`;
+			deleteButton.innerHTML = `Usuń`;
 
 
 
@@ -289,14 +312,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 
 		if (task.status) {
-			panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-ok text-success'></span> ${task.name}`;
+			glyphicon.className = `glyphicon glyphicon-ok text-success pull-left`
 		} else {
-			panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`;
+			glyphicon.className = `glyphicon glyphicon-remove text-danger pull-left`
 		}
-		
-		editButton.innerHTML = `Edytuj <span class='glyphicon glyphicon-chevron-right'></span>`;
-		searchButton.innerHTML = `Podgląd <span class='glyphicon glyphicon-search'></span>`;
-		deleteButton.innerHTML = `Usuń <span class='glyphicon glyphicon-trash'></span>`;
+
+		panelBodyDiv.innerHTML = `${task.name}`;
 		
 		panelInfoDiv.className = 'panel panel-info';
 		panelBodyDiv.className = 'panel-body';
@@ -310,7 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		panelBodyDiv.appendChild(searchButton);
 		panelBodyDiv.appendChild(deleteButton);
 
-
+		editButton.appendChild(chevronRightGlyphicon);
+		searchButton.appendChild(searchGlyphicon);
+		deleteButton.appendChild(trashGlyphicon);
+		panelBodyDiv.appendChild(glyphicon);
 	}
 
 	function loadingTasks() {
@@ -390,13 +414,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function addNewTask() {
-		if (document.querySelector('#newTaskName').value) {
+		if (document.getElementById('newTaskName').value) {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
 			refreshTasks();	
+			sort(newest);
 		}
 	}
-	
 	newTaskButton.addEventListener('click', addNewTask);
 	sortButton.addEventListener('click',whatSortButtonWasClicked, false);
 
