@@ -2,8 +2,64 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	let newTaskButton = document.querySelector('#addTask'),
+		sortButton = document.querySelector('#sort'),
 		id = 0,
 		taskArray = [ ];
+
+ 
+	function whatSortButtonWasClicked(event) {
+		if (event.target !== event.currentTarget) {
+			let clickedItem = event.target.id;
+			sort(clickedItem);
+		}
+		event.stopPropagation();
+	}
+
+
+	function sort(what){
+		let arrLength = taskArray.length,
+			taskHolderDiv = document.querySelector('#taskHolder');
+		switch (what) {
+       		case 'all':
+       			refreshTasks();
+       		break;
+       		case 'ready':
+       			refreshTasks();
+       			while (taskHolderDiv.hasChildNodes()) {
+					taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+				}
+       			for (let i = 0; i < arrLength; i += 1){
+       				if(taskArray[i].status){
+       					generateTasksOnSite(taskArray[i]);
+       				}
+       			}
+       		break;
+       		case 'notReady':
+       			refreshTasks();
+       			while (taskHolderDiv.hasChildNodes()) {
+					taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+				}
+       			for (let i = 0; i < arrLength; i += 1){
+       				if(!taskArray[i].status){
+       					generateTasksOnSite(taskArray[i]);
+       				}
+       			}
+       		break;
+       		case 'oldest':
+       			taskArray.sort(function(a, b) {
+				    return parseFloat(a.created) - parseFloat(b.created);
+				});
+       			refreshTasks();
+       		break;
+       		case 'newest':
+       			taskArray.sort(function(a, b) {
+				    return parseFloat(b.created) - parseFloat(a.created);
+				});
+       			refreshTasks();
+       		break;
+       		default:
+       }
+	}
 
 	function saveActualData() {
 		localStorage.setItem('localStorageTaskArray', JSON.stringify({
@@ -27,7 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	function refreshTasks(where,task){
+	function refreshTasks(){
+		let taskHolderDiv = document.querySelector('#taskHolder');
+		while (taskHolderDiv.hasChildNodes()) {
+			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+		}
+		loadingTasks();
 
 	}
 
@@ -38,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			taskHolderDiv = document.querySelector('#taskHolder'),
 			taskStatus = document.querySelector('#taskStatus'),
 			indexOfTask = taskArray.indexOf(task);
-		console.log(indexOfTask);
 
 		taskArray[indexOfTask].description = taskDescriptionInput.value;
 		taskArray[indexOfTask].deadline = taskDeadlineInput.value;
@@ -202,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function generateTasksOnSite(task) {
 		//generatorOfDom('taskHolder','div',`<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`,'panel panel-info',null,task.id);
+
+
 		let taskHolderDiv = document.querySelector('#taskHolder');
 
 		let panelInfoDiv = document.createElement('div'),
@@ -209,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			editButton = document.createElement('button'),
 			searchButton = document.createElement('button'),
 			deleteButton = document.createElement('button');
+
+
 
 		panelInfoDiv.id = task.id;
 
@@ -245,6 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		panelBodyDiv.appendChild(editButton);
 		panelBodyDiv.appendChild(searchButton);
 		panelBodyDiv.appendChild(deleteButton);
+
+
 	}
 
 	function loadingTasks() {
@@ -283,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function saveTask(task) {
-		taskArray.push(task);
+		taskArray.unshift(task);
 		saveActualData();
 	}
 
@@ -327,11 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (document.querySelector('#newTaskName').value) {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
-			generateTasksOnSite(newTask);
-			
+			refreshTasks();	
 		}
 	}
 	
 	newTaskButton.addEventListener('click', addNewTask);
+	sortButton.addEventListener('click',whatSortButtonWasClicked, false);
 
 });
