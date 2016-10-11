@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}));
 	}
 
-	function clearDiv(div){
-		if(div.firstChild){
+	function clearDiv(div) {
+		if (div.firstChild) {
 			div.removeChild(div.firstChild);
 		}
 	}
@@ -25,6 +25,35 @@ document.addEventListener('DOMContentLoaded', () => {
 			taskArray.splice(taskArray.indexOf(task), 1);
 			saveActualData();
 		}
+	}
+
+	function refreshTasks(where,task){
+
+	}
+
+	function saveChanges(task) {
+		let taskNameInput = document.querySelector('#taskName'),
+			taskDescriptionInput = document.querySelector('#taskDescription'),
+			taskDeadlineInput = document.querySelector('#taskDeadline'),
+			taskHolderDiv = document.querySelector('#taskHolder'),
+			taskStatus = document.querySelector('#taskStatus'),
+			indexOfTask = taskArray.indexOf(task);
+		console.log(indexOfTask);
+
+		taskArray[indexOfTask].description = taskDescriptionInput.value;
+		taskArray[indexOfTask].deadline = taskDeadlineInput.value;
+		taskArray[indexOfTask].lastEdit = getActualTime();
+		taskArray[indexOfTask].name = taskNameInput.value;
+		taskArray[indexOfTask].status = taskStatus.checked;
+
+		saveActualData();
+
+		while (taskHolderDiv.hasChildNodes()) {
+			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+		}
+
+		loadData();
+		editTask(taskArray[indexOfTask]);
 	}
 
 	function searchTask(task) {
@@ -109,11 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		saveButton.innerHTML = `Zapisz`;
 
 		if (task.status) {
-			taskIsDone = `<input type="checkbox" checked>`;
+			taskIsDone = `<input type="checkbox" checked id='taskStatus'>`;
 		} else {
-			taskIsDone = `<input type="checkbox">`;
+			taskIsDone = `<input type="checkbox" id='taskStatus'>`;
 		}
-			panelPrimaryDiv.innerHTML = `
+		panelPrimaryDiv.innerHTML = `
 					<div class='panel panel-primary'>
 						<div class='panel-heading'>
 							${task.name}
@@ -124,19 +153,19 @@ document.addEventListener('DOMContentLoaded', () => {
 								<div class='panel panel-info'>
 									<div class='panel-heading'>Nazwa zadania</div>
 									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.name}">
+										<input type="text" class="form-control" value="${task.name}" id='taskName'>
 									</div>
 								</div>
 								<div class='panel panel-info'>
 									<div class='panel-heading'>Opis zadania</div>
 									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.description}">
+										<input type="text" class="form-control" value="${task.description}" id='taskDescription'>
 									</div>
 								</div>
 								<div class='panel panel-info'>
 									<div class='panel-heading'>Do kiedy?</div>
 									<div class='panel-body'>
-										<input type="text" class="form-control" value="${task.deadline}">
+										<input type="text" class="form-control" value="${task.deadline}" id='taskDeadline'>
 									</div>
 								</div>
 								<div class='panel panel-info'>
@@ -166,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					</div>`;
 
 		infoHolderDiv.appendChild(panelPrimaryDiv);
-		console.log(panelPrimaryDiv.childNodes[1].childNodes[3]);
+
 		panelPrimaryDiv.childNodes[1].childNodes[3].appendChild(saveButton);
 
 	}
@@ -195,8 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			editTask(task);
 		};
 
-
-		panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`;
+		if (task.status) {
+			panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-ok text-success'></span> ${task.name}`;
+		} else {
+			panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`;
+		}
+		
 		editButton.innerHTML = `Edytuj <span class='glyphicon glyphicon-chevron-right'></span>`;
 		searchButton.innerHTML = `Podgląd <span class='glyphicon glyphicon-search'></span>`;
 		deleteButton.innerHTML = `Usuń <span class='glyphicon glyphicon-trash'></span>`;
