@@ -12,21 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		}));
 	}
 
+	function clearDiv(div){
+		if(div.firstChild){
+			div.removeChild(div.firstChild);
+		}
+	}
+
 	function deleteTask(task) {
 		if (confirm('Napewno chcesz usunąć zadanie??') === true) {
 			let taskDiv = document.querySelector(`[id='${task.id}']`);
 			taskDiv.parentNode.removeChild(taskDiv);
 			taskArray.splice(taskArray.indexOf(task), 1);
 			saveActualData();
-			
 		}
 	}
 
 	function searchTask(task) {
-		let searchHolderDiv = document.querySelector('#searchHolder'),
+		let infoHolderDiv = document.querySelector('#infoHolder'),
 			panelSuccessDiv = document.createElement('div'),
 			taskIsDone;
 
+		clearDiv(infoHolderDiv);
+		
 		if (task.status) {
 			taskIsDone = `<span class='glyphicon glyphicon-ok text-success'></span>`;
 		} else {
@@ -81,7 +88,86 @@ document.addEventListener('DOMContentLoaded', () => {
 						</div>
 					</div>`;
 
-		searchHolderDiv.appendChild(panelSuccessDiv);
+		infoHolderDiv.appendChild(panelSuccessDiv);
+
+	}
+
+	function editTask(task) {
+
+		let infoHolderDiv = document.querySelector('#infoHolder'),
+			panelPrimaryDiv = document.createElement('div'),
+			saveButton = document.createElement('button'),
+			taskIsDone;
+
+		clearDiv(infoHolderDiv);
+
+		saveButton.onclick = function () {
+			saveChanges(task);
+		};
+		
+		saveButton.className = 'btn btn-success btn-sm center-block';
+		saveButton.innerHTML = `Zapisz`;
+
+		if (task.status) {
+			taskIsDone = `<input type="checkbox" checked>`;
+		} else {
+			taskIsDone = `<input type="checkbox">`;
+		}
+			panelPrimaryDiv.innerHTML = `
+					<div class='panel panel-primary'>
+						<div class='panel-heading'>
+							${task.name}
+							<span class='pull-right'>${task.created}</span>
+						</div>
+						<div class='panel-body'>
+							<div class='row'>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Nazwa zadania</div>
+									<div class='panel-body'>
+										<input type="text" class="form-control" value="${task.name}">
+									</div>
+								</div>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Opis zadania</div>
+									<div class='panel-body'>
+										<input type="text" class="form-control" value="${task.description}">
+									</div>
+								</div>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Do kiedy?</div>
+									<div class='panel-body'>
+										<input type="text" class="form-control" value="${task.deadline}">
+									</div>
+								</div>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Data dodatnia</div>
+									<div class='panel-body'>
+										${task.created}
+									</div>
+								</div>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Data ostatniego edytowania</div>
+									<div class='panel-body'>
+										${task.lastEdit}
+									</div>
+								</div>
+								<div class='panel panel-info'>
+									<div class='panel-heading'>Zakończone?</div>
+									<div class='panel-body'>
+										 <div class="checkbox">
+								        <label>
+								          ${taskIsDone}
+								        </label>
+								      </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>`;
+
+		infoHolderDiv.appendChild(panelPrimaryDiv);
+		console.log(panelPrimaryDiv.childNodes[1].childNodes[3]);
+		panelPrimaryDiv.childNodes[1].childNodes[3].appendChild(saveButton);
 
 	}
 
@@ -104,6 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		searchButton.onclick = function () {
 			searchTask(task);
 		};
+
+		editButton.onclick = function () {
+			editTask(task);
+		};
+
 
 		panelBodyDiv.innerHTML = `<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`;
 		editButton.innerHTML = `Edytuj <span class='glyphicon glyphicon-chevron-right'></span>`;
@@ -204,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
 			generateTasksOnSite(newTask);
+			
 		}
 	}
 	
