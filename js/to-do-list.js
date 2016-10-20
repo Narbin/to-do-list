@@ -1,10 +1,10 @@
 /* global document:true localStorage:true */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener(`DOMContentLoaded`, () => {
 
-	let newTaskButton = document.getElementById('addTask'),
-		sortButton = document.getElementById('sort'),
-		closeButtonModalOk = document.getElementById('modalHideButtonOk'),
-		closeButtonModalCancel = document.getElementById('modalHideButtonCancel'),
+	let newTaskButton = document.getElementById(`addTask`),
+		sortButton = document.getElementById(`sort`),
+		closeButtonModalOk = document.getElementById(`modalHideButtonOk`),
+		closeButtonModalCancel = document.getElementById(`modalHideButtonCancel`),
 		id = 0,
 		taskArray = [ ];
 
@@ -15,53 +15,53 @@ document.addEventListener('DOMContentLoaded', () => {
 		event.stopPropagation();
 	}
 
-	function sort(what){
+	function sort(what) {
 		let arrLength = taskArray.length,
-			taskHolderDiv = document.getElementById('taskHolder');
+			taskHolderDiv = document.getElementById(`taskHolder`);
 		switch (what) {
-       		case 'all':
-       			refreshTasks();
-       		break;
-       		case 'ready':
-       			refreshTasks();
-       			while (taskHolderDiv.hasChildNodes()) {
+			case `all`:
+				refreshTasks();
+				break;
+			case `ready`:
+				refreshTasks();
+				while (taskHolderDiv.hasChildNodes()) {
 					taskHolderDiv.removeChild(taskHolderDiv.lastChild);
 				}
-       			for (let i = 0; i < arrLength; i += 1){
-       				if(taskArray[i].status){
-       					generateTasksOnSite(taskArray[i]);
-       				}
-       			}
-       		break;
-       		case 'notReady':
-       			refreshTasks();
-       			while (taskHolderDiv.hasChildNodes()) {
+				for (let i = 0; i < arrLength; i += 1) {
+					if (taskArray[i].status) {
+						generateTasksOnSite(taskArray[i]);
+					}
+				}
+				break;
+			case `notReady`:
+				refreshTasks();
+				while (taskHolderDiv.hasChildNodes()) {
 					taskHolderDiv.removeChild(taskHolderDiv.lastChild);
 				}
-       			for (let i = 0; i < arrLength; i += 1){
-       				if(!taskArray[i].status){
-       					generateTasksOnSite(taskArray[i]);
-       				}
-       			}
-       		break;
-       		case 'oldest':
-       			taskArray.sort(function(a, b) {
-				    return Date.parse(a.created) - Date.parse(b.created);
+				for (let i = 0; i < arrLength; i += 1) {
+					if (!taskArray[i].status) {
+						generateTasksOnSite(taskArray[i]);
+					}
+				}
+				break;
+			case `oldest`:
+				taskArray.sort(function (a, b) {
+					return Date.parse(a.created) - Date.parse(b.created);
 				});
-       			refreshTasks();
-       		break;
-       		case 'newest':
-       			taskArray.sort(function(a, b) {
-				    return Date.parse(b.created) - Date.parse(a.created);
+				refreshTasks();
+				break;
+			case `newest`:
+				taskArray.sort(function (a, b) {
+					return Date.parse(b.created) - Date.parse(a.created);
 				});
-       			refreshTasks();
-       		break;
-       		default:
-       }
+				refreshTasks();
+				break;
+			default:
+		}
 	}
 
 	function saveActualData() {
-		localStorage.setItem('localStorageTaskArray', JSON.stringify({
+		localStorage.setItem(`localStorageTaskArray`, JSON.stringify({
 			id: id,
 			taskArray: taskArray
 		}));
@@ -70,31 +70,31 @@ document.addEventListener('DOMContentLoaded', () => {
 	function clearFirstChild(div) {
 		if (div.firstChild) {
 			div.removeChild(div.firstChild);
-		}  
+		}
 	}
 
 	function hideModalWindow() {
-		let modalDiv = document.getElementById('modalDiv');
+		let modalDiv = document.getElementById(`modalDiv`);
 		modalDiv.data = ``;
 
-		modalDiv.style.display = "none";
-		modalDiv.className = "modal fade bs-example-modal-sm";
+		modalDiv.style.display = `none`;
+		modalDiv.className = `modal fade bs-example-modal-sm`;
 	}
 
 	function showModalWindow(text, action, task) {
-		let modalDiv = document.getElementById('modalDiv'),
-			modalDivText = document.getElementById('modalDivText');
+		let modalDiv = document.getElementById(`modalDiv`),
+			modalDivText = document.getElementById(`modalDivText`);
 
 		modalDiv.data = task.id;
 
-		modalDiv.style.display = "block";
-		modalDiv.className = "modal bs-example-modal-sm";
+		modalDiv.style.display = `block`;
+		modalDiv.className = `modal bs-example-modal-sm`;
 		modalDivText.innerHTML = text;
 
-		if (action === "alert") {
-			document.getElementById('modalHideButtonCancel').style.display = "none";
+		if (action === `alert`) {
+			document.getElementById(`modalHideButtonCancel`).style.display = `none`;
 		} else {
-			document.getElementById('modalHideButtonCancel').style.display = "inline-block";
+			document.getElementById(`modalHideButtonCancel`).style.display = `inline-block`;
 		}
 		
 	}
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function deleteTask(taskID) {
 
 		let taskDiv = document.getElementById(taskID),
-			task = taskArray.find(function (){ return id == taskID; });
+			task = taskArray.find(function () { return id === taskID; });
 		
 		taskDiv.parentNode.removeChild(taskDiv);
 		taskArray.splice(taskArray.indexOf(task), 1);
@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	}
 
-	function refreshTasks(){
-		let taskHolderDiv = document.getElementById('taskHolder');
+	function refreshTasks() {
+		let taskHolderDiv = document.getElementById(`taskHolder`);
 		while (taskHolderDiv.hasChildNodes()) {
 			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
 		}
@@ -120,12 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function saveChanges(task) {
-		console.log(task);
-		let taskNameInput = document.getElementById('taskName'),
-			taskDescriptionInput = document.getElementById('taskDescription'),
-			taskDeadlineInput = document.getElementById('taskDeadline'),
-			taskHolderDiv = document.getElementById('taskHolder'),
-			taskStatus = document.getElementById('taskStatus'),
+		let taskNameInput = document.getElementById(`taskName`),
+			taskDescriptionInput = document.getElementById(`taskDescription`),
+			taskDeadlineInput = document.getElementById(`taskDeadline`),
+			taskHolderDiv = document.getElementById(`taskHolder`),
+			taskStatus = document.getElementById(`taskStatus`),
 			indexOfTask = taskArray.indexOf(task);
 
 		taskArray[indexOfTask].description = taskDescriptionInput.value;
@@ -142,15 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		loadData();
 		editTask(taskArray[indexOfTask]);
-		showModalWindow(`Zmiany zostały zapisane!`,`alert`,"");
+		showModalWindow(`Zmiany zostały zapisane!`, `alert`, ``);
 	}
 
-	function createView(task,forWho) {
+	function createView(task, forWho) {
 
 		let taskIsDone,
 			doc;
 
-		if (forWho === `search`){
+		if (forWho === `search`) {
 			if (task.status) {
 				taskIsDone = `<span class="glyphicon glyphicon-ok text-success"></span>`;
 			} else {
@@ -203,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
 								</div>
 							</div>
 						</div>
-					</div>`
-		} else if(forWho === `edit`) {
+					</div>`;
+		} else if (forWho === `edit`) {
 			if (task.status) {
 				taskIsDone = `<input type="checkbox" checked id="taskStatus">`;
 			} else {
@@ -261,19 +260,18 @@ document.addEventListener('DOMContentLoaded', () => {
 								</div>
 							</div>
 						</div>
-					</div>`
+					</div>`;
 		}
 		return doc;
 	}
 
 	function searchTask(task) {
-		let infoHolderDiv = document.getElementById('infoHolder'),
-			panelSuccessDiv = document.createElement('div'),
-			taskIsDone;
+		let infoHolderDiv = document.getElementById(`infoHolder`),
+			panelSuccessDiv = document.createElement(`div`);
 
 		clearFirstChild(infoHolderDiv);
 
-		panelSuccessDiv.innerHTML = createView(task,`search`);;
+		panelSuccessDiv.innerHTML = createView(task, `search`);
 
 		infoHolderDiv.appendChild(panelSuccessDiv);
 
@@ -281,9 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function editTask(task) {
 
-		let infoHolderDiv = document.getElementById('infoHolder'),
-			panelPrimaryDiv = document.createElement('div'),
-			saveButton = document.createElement('button');
+		let infoHolderDiv = document.getElementById(`infoHolder`),
+			panelPrimaryDiv = document.createElement(`div`),
+			saveButton = document.createElement(`button`);
 			
 		clearFirstChild(infoHolderDiv);
 
@@ -291,10 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			saveChanges(task);
 		};
 		
-		saveButton.className = 'btn btn-success btn-sm center-block';
+		saveButton.className = `btn btn-success btn-sm center-block`;
 		saveButton.innerHTML = `Zapisz`;
 
-		panelPrimaryDiv.innerHTML = createView(task,`edit`);
+		panelPrimaryDiv.innerHTML = createView(task, `edit`);
 
 		infoHolderDiv.appendChild(panelPrimaryDiv);
 
@@ -303,36 +301,34 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function generateTasksOnSite(task) {
-		//generatorOfDom('taskHolder','div',`<span class='glyphicon glyphicon-remove text-danger'></span> ${task.name}`,'panel panel-info',null,task.id);
 
-		let taskHolderDiv = document.getElementById('taskHolder');
+		let taskHolderDiv = document.getElementById(`taskHolder`);
 
-		let panelInfoDiv = document.createElement('div'),
-			panelBodyDiv = document.createElement('div'),
-			editButton = document.createElement('div'),
-			searchButton = document.createElement('div'),
-			deleteButton = document.createElement('div');
+		let panelInfoDiv = document.createElement(`div`),
+			panelBodyDiv = document.createElement(`div`),
+			editButton = document.createElement(`div`),
+			searchButton = document.createElement(`div`),
+			deleteButton = document.createElement(`div`);
 
-			chevronRightGlyphicon = document.createElement('span');
-			searchGlyphicon = document.createElement('span');
-			trashGlyphicon = document.createElement('span');
-			glyphicon = document.createElement('span');
+		chevronRightGlyphicon = document.createElement(`span`);
+		searchGlyphicon = document.createElement(`span`);
+		trashGlyphicon = document.createElement(`span`);
+		glyphicon = document.createElement(`span`);
 
-			chevronRightGlyphicon.className = `glyphicon glyphicon-chevron-right`;
-			searchGlyphicon.className = `glyphicon glyphicon-search`;
-			trashGlyphicon.className = `glyphicon glyphicon-trash`;
+		chevronRightGlyphicon.className = `glyphicon glyphicon-chevron-right`;
+		searchGlyphicon.className = `glyphicon glyphicon-search`;
+		trashGlyphicon.className = `glyphicon glyphicon-trash`;
 
-			editButton.innerHTML = `Edytuj`;
-			searchButton.innerHTML = `Podgląd`;
-			deleteButton.innerHTML = `Usuń`;
+		editButton.innerHTML = `Edytuj`;
+		searchButton.innerHTML = `Podgląd`;
+		deleteButton.innerHTML = `Usuń`;
 
 
 
 		panelInfoDiv.id = task.id;
 
 		deleteButton.onclick = function () {
-			showModalWindow('Napewno chcesz usunąć to zadanie?','confirm',task,true);
-			//deleteTask(task);
+			showModalWindow(`Napewno chcesz usunąć to zadanie?`, `confirm`, task, true);
 		};
 
 		searchButton.onclick = function () {
@@ -344,18 +340,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 
 		if (task.status) {
-			glyphicon.className = `glyphicon glyphicon-ok text-success pull-left`
+			glyphicon.className = `glyphicon glyphicon-ok text-success pull-left`;
 		} else {
-			glyphicon.className = `glyphicon glyphicon-remove text-danger pull-left`
+			glyphicon.className = `glyphicon glyphicon-remove text-danger pull-left`;
 		}
 
 		panelBodyDiv.innerHTML = `${task.name}`;
 		
-		panelInfoDiv.className = 'panel panel-info';
-		panelBodyDiv.className = 'panel-body';
-		editButton.className = 'btn btn-primary pull-right btn-sm col-xs-12 col-sm-2';
-		searchButton.className = 'btn btn-info pull-right btn-sm col-xs-12 col-sm-2';
-		deleteButton.className = 'btn btn-danger pull-right btn-sm col-xs-12 col-sm-2';
+		panelInfoDiv.className = `panel panel-info`;
+		panelBodyDiv.className = `panel-body`;
+		editButton.className = `btn btn-primary pull-right btn-sm col-xs-12 col-sm-2`;
+		searchButton.className = `btn btn-info pull-right btn-sm col-xs-12 col-sm-2`;
+		deleteButton.className = `btn btn-danger pull-right btn-sm col-xs-12 col-sm-2`;
 
 		taskHolderDiv.appendChild(panelInfoDiv);
 		panelInfoDiv.appendChild(panelBodyDiv);
@@ -377,8 +373,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function loadData() {
-		if (localStorage.getItem('localStorageTaskArray')) {
-			let loadedData = JSON.parse(localStorage.getItem('localStorageTaskArray'));
+		if (localStorage.getItem(`localStorageTaskArray`)) {
+			let loadedData = JSON.parse(localStorage.getItem(`localStorageTaskArray`));
 			id = loadedData.id;
 			taskArray = loadedData.taskArray;
 
@@ -395,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function getTaskName() {
-		let newTaskName = document.querySelector('#newTaskName').value;
+		let newTaskName = document.querySelector(`#newTaskName`).value;
 		return newTaskName;
 	}
 
@@ -422,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function generatorOfDom(parentId, type, innerHTML, className, onClickFunction, setId) {
-		let whereHaveToAppearDiv = document.querySelector('#' + parentId),
+		let whereHaveToAppearDiv = document.querySelector(`#` + parentId),
 			objectOfDom = document.createElement(type);
 
 		if (innerHTML) {
@@ -446,25 +442,25 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function addNewTask() {
-		if (document.getElementById('newTaskName').value) {
+		if (document.getElementById(`newTaskName`).value) {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
-			refreshTasks();	
+			refreshTasks();
 			sort(newest);
 		}
 	}
-	newTaskButton.addEventListener('click', addNewTask);
-	sortButton.addEventListener('click', whatSortButtonWasClicked, false);
-	closeButtonModalOk.addEventListener('click', function(){
-		taskID = document.getElementById('modalDiv').data;
-		if(taskID){
+	newTaskButton.addEventListener(`click`, addNewTask);
+	sortButton.addEventListener(`click`, whatSortButtonWasClicked, false);
+	closeButtonModalOk.addEventListener(`click`, function() {
+		taskID = document.getElementById(`modalDiv`).data;
+		if (taskID) {
 			deleteTask(taskID);
 			hideModalWindow();
-		}else{
+		} else {
 			hideModalWindow();
 		}
 	}, false);
-	closeButtonModalCancel.addEventListener('click', hideModalWindow);
+	closeButtonModalCancel.addEventListener(`click`, hideModalWindow);
 
 
 });
