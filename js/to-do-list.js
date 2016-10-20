@@ -1,19 +1,19 @@
-/* global document:true localStorage:true confirm:true*/
+/* global document:true localStorage:true */
 document.addEventListener('DOMContentLoaded', () => {
 
 	let newTaskButton = document.getElementById('addTask'),
 		sortButton = document.getElementById('sort'),
+		closeButtonModalOk = document.getElementById('modalHideButtonOk'),
+		closeButtonModalCancel = document.getElementById('modalHideButtonCancel'),
 		id = 0,
 		taskArray = [ ];
 
- 
 	function whatSortButtonWasClicked(event) {
 		if (event.target !== event.currentTarget) {
 			sort(event.target.id);
 		}
 		event.stopPropagation();
 	}
-
 
 	function sort(what){
 		let arrLength = taskArray.length,
@@ -70,16 +70,44 @@ document.addEventListener('DOMContentLoaded', () => {
 	function clearFirstChild(div) {
 		if (div.firstChild) {
 			div.removeChild(div.firstChild);
-		}
+		}  
 	}
 
-	function deleteTask(task) {
-		if (confirm('Napewno chcesz usunąć zadanie??') === true) {
-			let taskDiv = document.getElementById(`${task.id}`);
-			taskDiv.parentNode.removeChild(taskDiv);
-			taskArray.splice(taskArray.indexOf(task), 1);
-			saveActualData();
+	function hideModalWindow() {
+		let modalDiv = document.getElementById('modalDiv');
+		modalDiv.data = ``;
+
+		modalDiv.style.display = "none";
+		modalDiv.className = "modal fade bs-example-modal-sm";
+	}
+
+	function showModalWindow(text, action, task) {
+		let modalDiv = document.getElementById('modalDiv'),
+			modalDivText = document.getElementById('modalDivText');
+
+		modalDiv.data = task.id;
+
+		modalDiv.style.display = "block";
+		modalDiv.className = "modal bs-example-modal-sm";
+		modalDivText.innerHTML = text;
+
+		if (action === "alert") {
+			document.getElementById('modalHideButtonCancel').style.display = "none";
+		} else {
+			document.getElementById('modalHideButtonCancel').style.display = "inline-block";
 		}
+		
+	}
+
+	function deleteTask(taskID) {
+
+		let taskDiv = document.getElementById(taskID),
+			task = taskArray.find(function (){ return id == taskID; });
+		
+		taskDiv.parentNode.removeChild(taskDiv);
+		taskArray.splice(taskArray.indexOf(task), 1);
+		saveActualData();
+
 	}
 
 	function refreshTasks(){
@@ -92,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function saveChanges(task) {
+		console.log(task);
 		let taskNameInput = document.getElementById('taskName'),
 			taskDescriptionInput = document.getElementById('taskDescription'),
 			taskDeadlineInput = document.getElementById('taskDeadline'),
@@ -113,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		loadData();
 		editTask(taskArray[indexOfTask]);
+		showModalWindow(`Zmiany zostały zapisane!`,`alert`,"");
 	}
 
 	function createView(task,forWho) {
@@ -120,12 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		let taskIsDone,
 			doc;
 
-		if (forWho === `edit`){
+		if (forWho === `search`){
 			if (task.status) {
-				taskIsDone = `<input type="checkbox" checked id="taskStatus">`;
+				taskIsDone = `<span class="glyphicon glyphicon-ok text-success"></span>`;
 			} else {
-				taskIsDone = `<input type="checkbox" id="taskStatus">`;
+				taskIsDone = `<span class="glyphicon glyphicon-remove text-danger"></span>`;
 			}
+			
 			doc = `
 					<div class="panel panel-success">
 						<div class="panel-heading">
@@ -173,11 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
 							</div>
 						</div>
 					</div>`
-		} else if(forWho === `search`) {
+		} else if(forWho === `edit`) {
 			if (task.status) {
-				taskIsDone = `<span class="glyphicon glyphicon-ok text-success"></span>`;
+				taskIsDone = `<input type="checkbox" checked id="taskStatus">`;
 			} else {
-				taskIsDone = `<span class="glyphicon glyphicon-remove text-danger"></span>`;
+				taskIsDone = `<input type="checkbox" id="taskStatus">`;
 			}
 			
 			doc = `
@@ -300,7 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		panelInfoDiv.id = task.id;
 
 		deleteButton.onclick = function () {
-			deleteTask(task);
+			showModalWindow('Napewno chcesz usunąć to zadanie?','confirm',task,true);
+			//deleteTask(task);
 		};
 
 		searchButton.onclick = function () {
@@ -422,6 +454,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 	newTaskButton.addEventListener('click', addNewTask);
-	sortButton.addEventListener('click',whatSortButtonWasClicked, false);
+	sortButton.addEventListener('click', whatSortButtonWasClicked, false);
+	closeButtonModalOk.addEventListener('click', function(){
+		taskID = document.getElementById('modalDiv').data;
+		if(taskID){
+			deleteTask(taskID);
+			hideModalWindow();
+		}else{
+			hideModalWindow();
+		}
+	}, false);
+	closeButtonModalCancel.addEventListener('click', hideModalWindow);
+
 
 });
