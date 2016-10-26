@@ -8,11 +8,19 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		id = 0,
 		taskArray = [ ];
 
-	function whatSortButtonWasClicked(event) {
-		if (event.target !== event.currentTarget) {
-			sort(event.target.id);
+	function loadingTasks() {
+		let taskArrLength = taskArray.length;
+		for (let i = 0; i < taskArrLength; i += 1) {
+			generateTasksOnSite(taskArray[i]);
 		}
-		event.stopPropagation();
+	}
+
+	function refreshTasks() {
+		let taskHolderDiv = document.getElementById(`taskHolder`);
+		while (taskHolderDiv.hasChildNodes()) {
+			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+		}
+		loadingTasks();
 	}
 
 	function sort(what) {
@@ -58,6 +66,13 @@ document.addEventListener(`DOMContentLoaded`, () => {
 				break;
 			default:
 		}
+	}
+
+	function whatSortButtonWasClicked(event) {
+		if (event.target !== event.currentTarget) {
+			sort(event.target.id);
+		}
+		event.stopPropagation();
 	}
 
 	function saveActualData() {
@@ -110,39 +125,22 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	}
 
-	function refreshTasks() {
-		let taskHolderDiv = document.getElementById(`taskHolder`);
-		while (taskHolderDiv.hasChildNodes()) {
-			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
-		}
-		loadingTasks();
-
+	function getActualTime() {
+		let actualDate = new Date(),
+			readActualDate = actualDate.toLocaleString();
+		return readActualDate;
 	}
 
-	function saveChanges(task) {
-		let taskNameInput = document.getElementById(`taskName`),
-			taskDescriptionInput = document.getElementById(`taskDescription`),
-			taskDeadlineInput = document.getElementById(`taskDeadline`),
-			taskHolderDiv = document.getElementById(`taskHolder`),
-			taskStatus = document.getElementById(`taskStatus`),
-			indexOfTask = taskArray.indexOf(task);
+	function loadData() {
+		if (localStorage.getItem(`localStorageTaskArray`)) {
+			let loadedData = JSON.parse(localStorage.getItem(`localStorageTaskArray`));
+			id = loadedData.id;
+			taskArray = loadedData.taskArray;
 
-		taskArray[indexOfTask].description = taskDescriptionInput.value;
-		taskArray[indexOfTask].deadline = taskDeadlineInput.value;
-		taskArray[indexOfTask].lastEdit = getActualTime();
-		taskArray[indexOfTask].name = taskNameInput.value;
-		taskArray[indexOfTask].status = taskStatus.checked;
-
-		saveActualData();
-
-		while (taskHolderDiv.hasChildNodes()) {
-			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+			loadingTasks();
 		}
-
-		loadData();
-		editTask(taskArray[indexOfTask]);
-		showModalWindow(`Zmiany zostały zapisane!`, `alert`, ``);
 	}
+
 
 	function createView(task, forWho) {
 
@@ -263,18 +261,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 					</div>`;
 		}
 		return doc;
-	}
-
-	function searchTask(task) {
-		let infoHolderDiv = document.getElementById(`infoHolder`),
-			panelSuccessDiv = document.createElement(`div`);
-
-		clearFirstChild(infoHolderDiv);
-
-		panelSuccessDiv.innerHTML = createView(task, `search`);
-
-		infoHolderDiv.appendChild(panelSuccessDiv);
-
+		
 	}
 
 	function editTask(task) {
@@ -300,6 +287,43 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	}
 
+	function saveChanges(task) {
+		let taskNameInput = document.getElementById(`taskName`),
+			taskDescriptionInput = document.getElementById(`taskDescription`),
+			taskDeadlineInput = document.getElementById(`taskDeadline`),
+			taskHolderDiv = document.getElementById(`taskHolder`),
+			taskStatus = document.getElementById(`taskStatus`),
+			indexOfTask = taskArray.indexOf(task);
+
+		taskArray[indexOfTask].description = taskDescriptionInput.value;
+		taskArray[indexOfTask].deadline = taskDeadlineInput.value;
+		taskArray[indexOfTask].lastEdit = getActualTime();
+		taskArray[indexOfTask].name = taskNameInput.value;
+		taskArray[indexOfTask].status = taskStatus.checked;
+
+		saveActualData();
+
+		while (taskHolderDiv.hasChildNodes()) {
+			taskHolderDiv.removeChild(taskHolderDiv.lastChild);
+		}
+
+		loadData();
+		editTask(taskArray[indexOfTask]);
+		showModalWindow(`Zmiany zostały zapisane!`, `alert`, ``);
+	}
+
+	function searchTask(task) {
+		let infoHolderDiv = document.getElementById(`infoHolder`),
+			panelSuccessDiv = document.createElement(`div`);
+
+		clearFirstChild(infoHolderDiv);
+
+		panelSuccessDiv.innerHTML = createView(task, `search`);
+
+		infoHolderDiv.appendChild(panelSuccessDiv);
+
+	}
+
 	function generateTasksOnSite(task) {
 
 		let taskHolderDiv = document.getElementById(`taskHolder`);
@@ -310,10 +334,10 @@ document.addEventListener(`DOMContentLoaded`, () => {
 			searchButton = document.createElement(`div`),
 			deleteButton = document.createElement(`div`);
 
-		chevronRightGlyphicon = document.createElement(`span`);
-		searchGlyphicon = document.createElement(`span`);
-		trashGlyphicon = document.createElement(`span`);
-		glyphicon = document.createElement(`span`);
+		let chevronRightGlyphicon = document.createElement(`span`),
+			searchGlyphicon = document.createElement(`span`),
+			trashGlyphicon = document.createElement(`span`),
+			glyphicon = document.createElement(`span`);
 
 		chevronRightGlyphicon.className = `glyphicon glyphicon-chevron-right`;
 		searchGlyphicon.className = `glyphicon glyphicon-search`;
@@ -365,30 +389,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		panelBodyDiv.appendChild(glyphicon);
 	}
 
-	function loadingTasks() {
-		let taskArrLength = taskArray.length;
-		for (let i = 0; i < taskArrLength; i += 1) {
-			generateTasksOnSite(taskArray[i]);
-		}
-	}
-
-	function loadData() {
-		if (localStorage.getItem(`localStorageTaskArray`)) {
-			let loadedData = JSON.parse(localStorage.getItem(`localStorageTaskArray`));
-			id = loadedData.id;
-			taskArray = loadedData.taskArray;
-
-			loadingTasks();
-		}
-	}
-
 	loadData();
-
-	function getActualTime() {
-		let actualDate = new Date(),
-			readActualDate = actualDate.toLocaleString();
-		return readActualDate;
-	}
 
 	function getTaskName() {
 		let newTaskName = document.querySelector(`#newTaskName`).value;
@@ -417,30 +418,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		}
 	}
 
-	function generatorOfDom(parentId, type, innerHTML, className, onClickFunction, setId) {
-		let whereHaveToAppearDiv = document.querySelector(`#` + parentId),
-			objectOfDom = document.createElement(type);
-
-		if (innerHTML) {
-			objectOfDom.innerHTML = innerHTML;
-		}
-
-		if (className) {
-			objectOfDom.className = className;
-		}
-
-		if (onClickFunction) {
-			objectOfDom.onclick = onClickFunction;
-		}
-
-		if (setId) {
-			objectOfDom.id = setId;
-		}
-
-		whereHaveToAppearDiv.appendChild(objectOfDom);
-
-	}
-
 	function clearInput(inputId) {
 		document.getElementById(inputId).value = ``;
 	}
@@ -450,14 +427,15 @@ document.addEventListener(`DOMContentLoaded`, () => {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
 			refreshTasks();
-			sort(newest);
+			sort(`newest`);
 			clearInput(`newTaskName`);
 		}
 	}
+
 	newTaskButton.addEventListener(`click`, addNewTask);
 	sortButton.addEventListener(`click`, whatSortButtonWasClicked, false);
 	closeButtonModalOk.addEventListener(`click`, function () {
-		taskID = document.getElementById(`modalDiv`).data;
+		let taskID = document.getElementById(`modalDiv`).data;
 		if (taskID) {
 			deleteTask(taskID);
 			hideModalWindow();
