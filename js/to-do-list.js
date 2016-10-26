@@ -27,9 +27,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		let arrLength = taskArray.length,
 			taskHolderDiv = document.getElementById(`taskHolder`);
 		switch (what) {
-			case `all`:
-				refreshTasks();
-				break;
 			case `ready`:
 				refreshTasks();
 				while (taskHolderDiv.hasChildNodes()) {
@@ -68,9 +65,20 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		}
 	}
 
+	function clearButtons(){
+	let sortingButtons = document.getElementById(`sort`);
+		for(let i = 1;i < sortingButtons.childNodes.length;i += 1){
+			if(sortingButtons.childNodes[i].className){
+				sortingButtons.childNodes[i].className = `btn btn-warning btn-group col-xs-6 col-sm-3`;
+			}
+		}
+	}
+
 	function whatSortButtonWasClicked(event) {
 		if (event.target !== event.currentTarget) {
+			clearButtons();
 			sort(event.target.id);
+			event.target.className = `btn btn-warning btn-group col-xs-6 col-sm-3 active`;
 		}
 		event.stopPropagation();
 	}
@@ -387,7 +395,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		panelBodyDiv.appendChild(searchButton);
 		panelBodyDiv.appendChild(deleteButton);
 		panelHeadingDiv.appendChild(glyphicon);
-		
+
 		editButton.appendChild(chevronRightGlyphicon);
 		searchButton.appendChild(searchGlyphicon);
 		deleteButton.appendChild(trashGlyphicon);
