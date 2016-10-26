@@ -261,7 +261,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 					</div>`;
 		}
 		return doc;
-		
+
 	}
 
 	function editTask(task) {
@@ -330,6 +330,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 		let panelInfoDiv = document.createElement(`div`),
 			panelBodyDiv = document.createElement(`div`),
+			panelHeadingDiv = document.createElement(`div`),
 			editButton = document.createElement(`div`),
 			searchButton = document.createElement(`div`),
 			deleteButton = document.createElement(`div`);
@@ -346,7 +347,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		editButton.innerHTML = `Edytuj`;
 		searchButton.innerHTML = `Podgląd`;
 		deleteButton.innerHTML = `Usuń`;
-
 
 
 		panelInfoDiv.id = task.id;
@@ -369,24 +369,29 @@ document.addEventListener(`DOMContentLoaded`, () => {
 			glyphicon.className = `glyphicon glyphicon-remove text-danger pull-left`;
 		}
 
-		panelBodyDiv.innerHTML = `${task.name}`;
+
+
+		panelHeadingDiv.innerHTML = `${task.name}`;
 		
 		panelInfoDiv.className = `panel panel-info`;
+		panelHeadingDiv.className = `panel-heading`;
 		panelBodyDiv.className = `panel-body`;
-		editButton.className = `btn btn-primary pull-right btn-sm col-xs-12 col-sm-2`;
-		searchButton.className = `btn btn-info pull-right btn-sm col-xs-12 col-sm-2`;
-		deleteButton.className = `btn btn-danger pull-right btn-sm col-xs-12 col-sm-2`;
+		editButton.className = `btn btn-primary pull-right btn-sm col-xs-4 col-sm-2`;
+		searchButton.className = `btn btn-info pull-right btn-sm col-xs-4 col-sm-2`;
+		deleteButton.className = `btn btn-danger pull-right btn-sm col-xs-4 col-sm-2`;
 
 		taskHolderDiv.appendChild(panelInfoDiv);
+		panelInfoDiv.appendChild(panelHeadingDiv);
 		panelInfoDiv.appendChild(panelBodyDiv);
 		panelBodyDiv.appendChild(editButton);
 		panelBodyDiv.appendChild(searchButton);
 		panelBodyDiv.appendChild(deleteButton);
-
+		panelHeadingDiv.appendChild(glyphicon);
+		
 		editButton.appendChild(chevronRightGlyphicon);
 		searchButton.appendChild(searchGlyphicon);
 		deleteButton.appendChild(trashGlyphicon);
-		panelBodyDiv.appendChild(glyphicon);
+		
 	}
 
 	loadData();
