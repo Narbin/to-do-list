@@ -65,7 +65,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		}
 	}
 
-	function clearButtons(){
+	function clearSortButtons(){
 	let sortingButtons = document.getElementById(`sort`);
 		for(let i = 1;i < sortingButtons.childNodes.length;i += 1){
 			if(sortingButtons.childNodes[i].className){
@@ -76,7 +76,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	function whatSortButtonWasClicked(event) {
 		if (event.target !== event.currentTarget) {
-			clearButtons();
+			clearSortButtons();
 			sort(event.target.id);
 			event.target.className = `btn btn-warning btn-group col-xs-6 col-sm-3 active`;
 		}
@@ -130,6 +130,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		taskDiv.parentNode.removeChild(taskDiv);
 		taskArray.splice(taskArray.indexOf(task), 1);
 		saveActualData();
+		deleteView();
 
 	}
 
@@ -270,6 +271,11 @@ document.addEventListener(`DOMContentLoaded`, () => {
 		}
 		return doc;
 
+	}
+
+	function deleteView(){
+		let infoHolderDiv = document.getElementById(`infoHolder`);
+		infoHolderDiv.innerHTML = ``;
 	}
 
 	function editTask(task) {
