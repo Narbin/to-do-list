@@ -441,17 +441,22 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	}
 
+	function clearInput(inputId) {
+		document.getElementById(inputId).value = ``;
+	}
+
 	function addNewTask() {
 		if (document.getElementById(`newTaskName`).value) {
 			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
 			saveTask(newTask);
 			refreshTasks();
 			sort(newest);
+			clearInput(`newTaskName`);
 		}
 	}
 	newTaskButton.addEventListener(`click`, addNewTask);
 	sortButton.addEventListener(`click`, whatSortButtonWasClicked, false);
-	closeButtonModalOk.addEventListener(`click`, function() {
+	closeButtonModalOk.addEventListener(`click`, function () {
 		taskID = document.getElementById(`modalDiv`).data;
 		if (taskID) {
 			deleteTask(taskID);
