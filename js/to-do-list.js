@@ -167,7 +167,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 					<div class="panel panel-success">
 						<div class="panel-heading">
 							${task.name}
-							<span class="text-primary pull-right">${task.created}</span>
 						</div>
 						<div class="panel-body">
 							<div class="row">
@@ -221,7 +220,6 @@ document.addEventListener(`DOMContentLoaded`, () => {
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							${task.name}
-							<span class="pull-right">${task.created}</span>
 						</div>
 						<div class="panel-body">
 							<div class="row">
@@ -234,7 +232,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 								<div class="panel panel-info">
 									<div class="panel-heading">Opis zadania</div>
 									<div class="panel-body">
-										<input type="text" class="form-control" value="${task.description}" id="taskDescription">
+										<textarea class="form-control" rows="3" id="taskDescription">${task.description}</textarea>
 									</div>
 								</div>
 								<div class="panel panel-info">
@@ -255,15 +253,12 @@ document.addEventListener(`DOMContentLoaded`, () => {
 										${task.lastEdit}
 									</div>
 								</div>
-								<div class="panel panel-info">
-									<div class="panel-heading">Zakończone?</div>
-									<div class="panel-body">
-										 <div class="checkbox">
+									<div class="checkbox text-center">
 								        <label>
-								          ${taskIsDone}
+								          	${taskIsDone}
+								          	Wykonane ?
 								        </label>
-								      </div>
-									</div>
+								    </div>
 								</div>
 							</div>
 						</div>
