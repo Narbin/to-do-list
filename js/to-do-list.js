@@ -51,13 +51,13 @@ document.addEventListener(`DOMContentLoaded`, () => {
 				break;
 			case `oldest`:
 				taskArray.sort(function (a, b) {
-					return Date.parse(a.created) - Date.parse(b.created);
+					return a.createdMS - b.createdMS;
 				});
 				refreshTasks();
 				break;
 			case `newest`:
 				taskArray.sort(function (a, b) {
-					return Date.parse(b.created) - Date.parse(a.created);
+					return b.createdMS - a.createdMS;
 				});
 				refreshTasks();
 				break;
@@ -134,9 +134,9 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	}
 
-	function getActualTime() {
+	function getMSTime() {
 		let actualDate = new Date(),
-			readActualDate = actualDate.toLocaleString();
+			readActualDate = actualDate.getTime();
 		return readActualDate;
 	}
 
@@ -191,7 +191,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 								<div class="panel panel-info">
 									<div class="panel-heading">Data dodatnia</div>
 									<div class="panel-body">
-										${task.created}
+										${task.createdLocal}
 									</div>
 								</div>
 								<div class="panel panel-info">
@@ -244,7 +244,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 								<div class="panel panel-info">
 									<div class="panel-heading">Data dodatnia</div>
 									<div class="panel-body">
-										${task.created}
+										${task.createdLocal}
 									</div>
 								</div>
 								<div class="panel panel-info">
@@ -306,7 +306,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 		taskArray[indexOfTask].description = taskDescriptionInput.value;
 		taskArray[indexOfTask].deadline = taskDeadlineInput.value;
-		taskArray[indexOfTask].lastEdit = getActualTime();
+		taskArray[indexOfTask].lastEdit = new Date().toLocaleString();
 		taskArray[indexOfTask].name = taskNameInput.value;
 		taskArray[indexOfTask].status = taskStatus.checked;
 
@@ -421,14 +421,20 @@ document.addEventListener(`DOMContentLoaded`, () => {
 	}
 
 	class Task {
-		constructor(_taskId, _taskName, _created, _status) {
+		constructor(_taskId, _taskName, _createdMS, _status) {
 			this.id = _taskId;
 			this.name = _taskName;
 			this.description = _taskName;
-			this.created = _created;
+			this.createdMS = _createdMS;
+			this.createdLocal = (new Date(this.createdMS)).toLocaleString();
 			this.status = _status;
-			this.lastEdit = _created;
-			this.deadline = _created;
+			this.lastEdit = (new Date(this.createdMS)).toLocaleString();
+			this.lastEditMS = _createdMS;
+			this.deadline = (new Date(this.createdMS+216000000)).toLocaleString();
+		}
+
+		getLocalTime() {
+
 		}
 	}
 
@@ -438,7 +444,7 @@ document.addEventListener(`DOMContentLoaded`, () => {
 
 	function addNewTask() {
 		if (document.getElementById(`newTaskName`).value) {
-			let newTask = new Task(getTaskID(), getTaskName(), getActualTime(), false);
+			let newTask = new Task(getTaskID(), getTaskName(), getMSTime(), false);
 			saveTask(newTask);
 			refreshTasks();
 			sort(`newest`);
